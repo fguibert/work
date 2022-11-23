@@ -1,0 +1,141 @@
+swagger: "2.0"
+info:
+  description: "Swagger API REST MVS DARVA pour le POC CRM Salesforce<br/><small>"
+  version: "0.1"
+  title: "API DARVA"
+  termsOfService: "https://www.darva.com"
+  contact:
+    email: "fabien.guibert.externe@darva.com"
+  license:
+    name: "Propriétaire"
+    url: "https://www.darva.com"
+host: "www.darva.com"
+basePath: "/"
+
+schemes:
+- "https"
+paths:
+  /customer:
+    post:
+      tags:
+      - "Inscription"
+      summary: "Service mocké pour MVS afin de simuler la création d'un client et le retour d'un code client aléatoire"
+      description: ""
+      operationId: "customer"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      
+      - in: "header"
+        name: "apiKey"
+        description: "Clé d'accès à l'API (fournie par DARVA)"
+        type: "string"
+        required: true
+      
+      - in: "body"
+        name: "body"
+        description: "Objet JSON de l'inscription client à insérer dans le body. Consulter le modèle de données pour les formats attendus"
+        required: true
+        schema:
+          $ref: "#/definitions/Customer"
+     
+
+      responses:
+        
+        "200":
+          description: "OK, client créé et code client retourné"
+          schema:
+            $ref: "#/definitions/ApiResponse_200"
+        "403":
+          description: "ERREUR - Opération impossible : ApiKey invalide dans le header de la requête"
+        "404":
+          description: "ERREUR : Api URL introuvable"
+        "400":
+          schema:
+            $ref: "#/definitions/ApiResponse_400"
+          description: "ERREUR - Opération impossible : Objet client absent du corps de la requête\n
+                        ERREUR - Opération impossible : Raison sociale absente ou invalide\n
+                        ERREUR - Opération impossible : SIREN absent ou invalide"
+  
+        "500":
+          description: "ERREUR - Erreur système"
+
+      security: 
+        - ApiKeyAuth: []
+
+securityDefinitions:
+
+ ApiKeyAuth:
+    type: apiKey
+    in: header
+    name: apiKey
+    
+    
+definitions:
+
+
+      
+  Customer:
+    type: "object"
+    required:
+    - "raisonSociale"
+    - "siren"
+    properties:
+      raisonSociale:
+        type: "string"
+        example: "DARVA"
+        minLength: 1
+        maxLength: 256
+      siren:
+        type: "string"
+        example: "123456789"
+        maxLength: 9
+        minLength: 9
+        
+      
+  ApiResponse_200:
+    type: "object"
+    properties:
+    
+      result:
+        description: "Résultat du traitement de la requete"
+        type: "boolean"
+        example : "true"
+        
+      msg:
+        example : "OK - Client créé"
+        type: "string"
+        description: "Message de retour de l'API : OK ou ERREUR + détail"
+        
+      data:
+        example : "45211"
+        type: "string"
+        description: "Si OK, retourne le code client généré sur 5 chiffres. Si erreur, indication du code erreur (E0*)"
+        
+  
+        
+  ApiResponse_400:
+    type: "object"
+    properties:
+    
+      result:
+        description: "Résultat du traitement de la requete"
+        type: "boolean"
+        example : "false"
+        
+      msg:
+        example : "ERREUR - Opération impossible : Raison sociale absente ou invalide"
+        type: "string"
+        description: "Message de retour de l'API : OK ou ERREUR + détail"
+        
+        
+      data:
+        example : "E03"
+        type: "string"
+        description: "Si erreur, indication du code erreur (E0*)"
+      
+externalDocs:
+  description: "En savoir plus à propos de DARVA"
+  url: "https://www.darva.com"
