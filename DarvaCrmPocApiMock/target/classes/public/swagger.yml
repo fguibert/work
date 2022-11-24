@@ -9,11 +9,11 @@ info:
   license:
     name: "Propriétaire"
     url: "https://www.darva.com"
-host: "www.darva.com"
+host: "http://94.23.15.42:8083/"
 basePath: "/"
 
 schemes:
-- "https"
+- "http"
 paths:
   /customer:
     post:
