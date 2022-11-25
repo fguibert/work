@@ -5,6 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -54,6 +55,14 @@ public class ApiController {
 
 	}
 
+	@GetMapping(value = "/health/live", produces = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseStatus(HttpStatus.OK)
+	@ResponseBody
+	public ResponseEntity<?> healthCheck() {
+		String result = "{\n\"status\":\"UP\",\n\"checks\":[]\n}";
+		return new ResponseEntity<>(result, HttpStatus.OK);
+
+	}
 
 
 	
